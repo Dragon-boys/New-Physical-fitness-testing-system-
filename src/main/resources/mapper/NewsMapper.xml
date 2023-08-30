@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test03.dao.NewsDao">
+    <resultMap id="NewsMap" type="com.example.test03.bean.news.News">
+        <result property="id" column="id"></result>
+        <result property="addTime" column="add_time"></result>
+        <result property="picture" column="picture"></result>
+        <result property="content" column="content"></result>
+        <result property="introduction" column="introduction"></result>
+        <result property="title" column="title"></result>
+    </resultMap>
+    <select id="selectBatch" resultMap="NewsMap">
+        select * from t_news
+                 where id in
+                 <foreach collection="list" item="id" open="(" separator="," close=")">
+                     #{id}
+                 </foreach>
+    </select>
+    <insert id="insertBatch">
+        insert into t_news(add_time,picture,content,introduction,title) values
+        <foreach collection="list" item="item"  separator=",">
+             (now(),#{item.picture},#{item.content},#{item.introduction},#{item.title})
+        </foreach>
+    </insert>
+
+    <update id="updateBatch">
+        <foreach collection="list" item="item" index="index"  separator=";">
+            update t_news
+                <set>
+                    <if test="item.title != null">
+                        title = #{item.title}
+                    </if>
+                </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+    <delete id="deleteBatch">
+        delete from t_news where id in
+            <foreach collection="list" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </delete>
+</mapper>

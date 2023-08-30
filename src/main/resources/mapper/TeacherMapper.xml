@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test03.dao.TeacherDao">
+    <resultMap id="teacherMap" type="com.example.test03.bean.teacher.Teacher">
+        <result property="id" column="id"></result>
+        <result property="no" column="no"></result>
+        <result property="phone" column="phone"></result>
+        <result property="headSculpture" column="head_sculpture"></result>
+        <result property="sex" column="sex"></result>
+        <result property="password" column="password"></result>
+        <result property="name" column="name"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="age" column="age"></result>
+    </resultMap>
+
+    <update id="updateBatchById">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_teacher
+                <set>
+                    <if test="item.createTime != null">
+                        create_time = now()
+                    </if>
+                </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+    <select id="selectById" resultMap="teacherMap">
+        select * from t_teacher
+            where id in
+            <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item.id}
+            </foreach>
+    </select>
+    <insert id="insertBatch" keyProperty="id" parameterType="com.example.test03.bean.teacher.Teacher">
+        insert into t_teacher(no,phone,head_sculpture,sex,password,name,create_time,age)
+        values
+            <foreach collection="list" item="item"  separator=",">
+                (#{item.no},#{item.phone},#{item.headSculpture},#{item.sex},#{item.password},#{item.name},now(),#{item.age})
+            </foreach>
+    </insert>
+    
+    <delete id="deleteById" parameterType="java.util.Arrays">
+        delete from t_teacher where id in 
+            <foreach collection="array" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </delete>
+
+</mapper>

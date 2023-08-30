@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test03.dao.UserDao">
+    <resultMap id="resMap" type="com.example.test03.bean.user.User">
+        <result property="id" column="t_id"></result>
+        <result property="userName" column="t_username"></result>
+        <result property="passWord" column="t_password"></result>
+        <result property="createTime" column="t_create_time"></result>
+        <result property="role" column="t_role"></result>
+    </resultMap>
+    
+    <select id="listUser" resultMap="resMap">
+        select * from t_user where t_id = #{id}
+    </select>
+</mapper>

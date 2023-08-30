@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.test03.dao.BaoGaoDao">
+    <resultMap id="resMap" type="com.example.test03.bean.testReport.BaoGao">
+        <result property="id" column="t_id"/>
+        <result property="createTime" column="t_create_time"/>
+        <result property="testName" column="t_test_name"/>
+        <result property="testType" column="t_test_type"/>
+        <result property="testResults" column="t_test_results"/>
+        <result property="evaluationContent" column="t_evaluation_content"/>
+        <result property="studentNo" column="t_no"/>
+        <result property="studentName" column="t_name"/>
+        <result property="teacherNo" column="t_no1"/>
+        <result property="teacherName" column="t_name1"/>
+    </resultMap>
+
+    <select id="selectBaoGao" resultMap="resMap">
+        select
+            s.s_no,s.s_name,t.t_jiaoshigonghao,t.t_name,c.*
+        from
+            c_ceshibaogao c
+        join
+            s_student s
+        on
+            s.s_id = c.s_id
+        join
+            t_teacher t
+        on
+            t.t_id = c.t_id
+        where
+            s_no = #{cno}
+    </select>
+
+    <select id="selectById" resultMap="resMap">
+        select
+            s.t_no,s.t_name,t.t_no1,t.t_name1,c.*
+        from
+            t_test_port c
+        join
+            t_student s
+        on
+            s.t_id = c.t_student_id
+        join
+            t_teacher t
+        on
+            t.t_id = c.t_teacher_id
+        where
+            s.t_no = #{studentNo}
+    </select>
+
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into c_ceshibaogao(c_id,create_time,ceshimingcheng,ceshileixing,ceshichengji,cepingneirong)
+        values
+            <foreach collection="list" item="entity" separator=",">
+                (#{entity.cid},
+                 #{entity.createTime},
+                 #{entity.ceShiMingCheng},
+                 #{entity.ceShiLeiXin`g},
+                 #{entity.ceShiChengJi},
+                 #{entity.cePingNeiRong})
+            </foreach>
+    </insert>
+
+
+</mapper>

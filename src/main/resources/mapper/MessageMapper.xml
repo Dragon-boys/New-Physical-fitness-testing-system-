@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test03.dao.MessageDao">
+    <resultMap id="resMap" type="com.example.test03.bean.messages.Messages">
+        <result property="id" column="id"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="userName" column="username"></result>
+        <result property="avatar" column="avatar"></result>
+        <result property="content" column="content"></result>
+        <result property="pictureContent" column="picture_content"></result>
+        <result property="pictureReply" column="picture_reply"></result>
+        <result property="reply" column="reply"></result>
+        <result property="userNo" column="user_no"></result>
+    </resultMap>
+    <delete id="deleteBatchById">
+        delete from t_messages where id = #{id}
+    </delete>
+
+    <delete id="deleteById">
+        delete from t_messages where id = #{id}
+    </delete>
+    <update id="updateAvatar">
+        update t_messages set avatar = #{avatar}
+            <where>
+                1=1
+                <if test="id != null">
+                    and id = #{id}
+                </if>
+            </where>
+    </update>
+
+    <insert id="insertBatch" parameterType="com.example.test03.bean.messages.Messages" keyProperty="id">
+        insert into
+            t_messages(create_time,username,avatar,content,picture_content,picture_reply,reply,user_no)
+        values
+            (#{createTime},#{userName},#{avatar},#{content},#{pictureContent},#{pictureReply},#{reply},#{userNo})
+    </insert>
+
+    <select id="selectById" resultMap="resMap">
+            select * from t_messages
+                    where
+                        <if test="id != null">
+                            id = #{id}
+                        </if>
+    </select>
+
+    <select id="selectBatch" resultMap="resMap" parameterType="java.util.List" resultType="com.example.test03.bean.messages.Messages">
+        select * from t_messages
+            where
+                id in
+            <foreach collection="list" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </select>
+    
+
+</mapper>
