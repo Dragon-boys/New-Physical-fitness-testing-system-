@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test03.dao.TestTypeDao">
+    <resultMap id="typeMap" type="com.example.test03.bean.testType.TestType">
+        <result column="id" property="id"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="test_type" property="testType"></result>
+    </resultMap>
+    <select id="selectAllById" resultMap="typeMap">
+        select * from t_test_type
+            where id in
+            <foreach collection="list" open="(" separator="," close=")">
+                #{item.id}
+            </foreach>
+    </select>
+</mapper>
